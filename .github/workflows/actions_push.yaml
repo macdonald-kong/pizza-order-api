@@ -4,26 +4,15 @@ on:
   push:
     branches: 
       - master
+      
 jobs:
-  build_kong_config:
-    runs-on: self-hosted
-    name: Build & Static Code Analysis
-    steps:        
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Lint OpenAPI Spec
-      run: |
-        /bin/sh -c 'inso lint spec ./specs/orders.yaml'
-    - name: Generate Kong declarative configuration from Spec
-      run: |
-        /bin/sh -c 'inso generate config ./specs/orders.yaml --type declarative > /tmp/kong.yaml'
-    - name: Validate Kong declarative configuration
-      run: |
-        /bin/sh -c 'pushd /tmp && deck validate'
+  call-workflow:
+    uses: ./.github/workflows/actions_push_pr.yaml
+      
   deploy_to_kong:
     runs-on: self-hosted
     name: Deploy
-    needs: build_kong_config
+    needs: call-workflow
     steps:        
     - name: Deploy declarative config
       run: |
