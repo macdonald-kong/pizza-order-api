@@ -8,7 +8,7 @@ on:
 jobs:
   build_kong_config:
     runs-on: self-hosted
-    name: Build
+    name: Build Config
     steps:        
     - name: Checkout
       uses: actions/checkout@v2
@@ -21,6 +21,7 @@ jobs:
   static_code_analysis:
     runs-on: self-hosted
     name: Static Code Analysis
+    needs: build_kong_config
     steps:        
     - name: Validate Kong declarative configuration
       run: |
