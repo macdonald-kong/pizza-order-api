@@ -11,6 +11,9 @@ jobs:
     steps:        
     - name: Checkout
       uses: actions/checkout@v2
+    - name: Lint OpenAPI Spec
+      run: |
+        /bin/sh -c 'inso lint spec ./specs/orders.yaml'
     - name: Generate Kong declarative configuration from Spec
       run: |
         /bin/sh -c 'inso generate config ./specs/orders.yaml --type declarative > /tmp/kong.yaml'
