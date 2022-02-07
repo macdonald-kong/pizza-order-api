@@ -1,4 +1,4 @@
-name: Action on Push to generate, validate and push config to Kong; Publish to Dev Portal
+name: Deploy and Test on Kong
 
 on:
   push:
