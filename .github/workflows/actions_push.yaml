@@ -5,9 +5,9 @@ on:
     branches: 
       - master
 jobs:
-  deploy_to_kong:
+  build_kong_config:
     runs-on: self-hosted
-    name: Action on Push to generate, validate and push config to Kong; Publish to Dev Portal
+    name: Build
     steps:        
     - name: Checkout
       uses: actions/checkout@v2
@@ -20,12 +20,23 @@ jobs:
     - name: Validate Kong declarative configuration
       run: |
         /bin/sh -c 'pushd /tmp && deck validate'
+  deploy_to_kong_and_test:
+    runs-on: self-hosted
+    name: Deploy and Test
+    steps:        
     - name: Deploy declarative config
       run: |
         /bin/sh -c 'pushd /tmp && deck sync --kong-addr http://admin.kong.demo:8001 --headers Kong-Admin-Token:kong'
     - name: Run Unit Tests
       run: |
         /bin/sh -c 'inso run test uts_616d31 -e env_env_3abee4'        
+    - name: Publish Spec to Dev Portal
+      run: |
+        /bin/sh -c 'pushd ./specs && http --check-status --ignore-stdin PUT http://admin.kong.demo:8001/default/files/specs/orders.yaml Kong-Admin-Token:kong contents=@orders.yaml'
+  publish_to_portal:
+    runs-on: self-hosted
+    name: Publish
+    steps:            
     - name: Publish Spec to Dev Portal
       run: |
         /bin/sh -c 'pushd ./specs && http --check-status --ignore-stdin PUT http://admin.kong.demo:8001/default/files/specs/orders.yaml Kong-Admin-Token:kong contents=@orders.yaml'
