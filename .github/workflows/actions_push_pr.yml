@@ -1,10 +1,9 @@
 name: Build and Test Kong Config
-
 on: 
   workflow_call:
   pull_request:
     branches: 
-      - master
+      - main
 jobs:
   build_kong_config:
     runs-on: self-hosted
