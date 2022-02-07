@@ -30,7 +30,7 @@ paths:
           policy: local
       responses:
         '200':
-          description: Order object
+          description: OK
           content:
             application/json:
               schema:
