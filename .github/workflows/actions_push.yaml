@@ -6,13 +6,13 @@ on:
       - master
       
 jobs:
-  call-workflow:
+  build-test:
     uses: ./.github/workflows/actions_push_pr.yml
       
   deploy_to_kong:
     runs-on: self-hosted
     name: Deploy
-    needs: call-workflow
+    needs: build-test
     steps:        
     - name: Deploy declarative config
       run: |
