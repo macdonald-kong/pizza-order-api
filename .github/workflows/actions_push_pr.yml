@@ -1,6 +1,7 @@
 name: Build and Test Kong Config
 
 on: 
+  workflow_call:
   pull_request:
     branches: 
       - master
