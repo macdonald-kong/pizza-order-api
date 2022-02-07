@@ -7,7 +7,7 @@ on:
 jobs:
   build_kong_config:
     runs-on: self-hosted
-    name: Build
+    name: Build & Static Code Analysis
     steps:        
     - name: Checkout
       uses: actions/checkout@v2
@@ -30,7 +30,7 @@ jobs:
         /bin/sh -c 'pushd /tmp && deck sync --kong-addr http://admin.kong.demo:8001 --headers Kong-Admin-Token:kong'
   test_kong:
     runs-on: self-hosted
-    name: Test
+    name: Integration Testing
     needs: deploy_to_kong
     steps:        
     - name: Run Unit Tests
