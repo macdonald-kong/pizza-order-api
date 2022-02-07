@@ -20,22 +20,32 @@ jobs:
     - name: Validate Kong declarative configuration
       run: |
         /bin/sh -c 'pushd /tmp && deck validate'
-  deploy_to_kong_and_test:
+  deploy_to_kong:
     runs-on: self-hosted
-    name: Deploy and Test
+    name: Deploy
+    needs: build_kong_config
     steps:        
     - name: Deploy declarative config
       run: |
         /bin/sh -c 'pushd /tmp && deck sync --kong-addr http://admin.kong.demo:8001 --headers Kong-Admin-Token:kong'
     - name: Run Unit Tests
       run: |
-        /bin/sh -c 'inso run test uts_616d31 -e env_env_3abee4'        
-    - name: Publish Spec to Dev Portal
+        /bin/sh -c 'inso run test uts_616d31 -e env_env_3abee4'
+  test_kong:
+    runs-on: self-hosted
+    name: Test
+    needs: deploy_to_kong
+    steps:        
+    - name: Deploy declarative config
       run: |
-        /bin/sh -c 'pushd ./specs && http --check-status --ignore-stdin PUT http://admin.kong.demo:8001/default/files/specs/orders.yaml Kong-Admin-Token:kong contents=@orders.yaml'
+        /bin/sh -c 'pushd /tmp && deck sync --kong-addr http://admin.kong.demo:8001 --headers Kong-Admin-Token:kong'
+    - name: Run Unit Tests
+      run: |
+        /bin/sh -c 'inso run test uts_616d31 -e env_env_3abee4'
   publish_to_portal:
     runs-on: self-hosted
     name: Publish
+    needs: test_kong
     steps:            
     - name: Publish Spec to Dev Portal
       run: |
