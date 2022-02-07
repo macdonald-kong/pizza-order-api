@@ -6,7 +6,7 @@ on:
     branches: 
       - master
 jobs:
-  build_kong_config:
+  reusable_workflow_job:
     runs-on: self-hosted
     name: Build & Static Code Analysis
     steps:        
