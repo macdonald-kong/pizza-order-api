@@ -18,6 +18,11 @@ paths:
       summary: Fetches an order
       tags:
         - order
+      plugins:
+      x-kong-plugin-cors:
+        enabled: true
+        config: 
+          max_age: 3600
       x-kong-plugin-mocking:
         enabled: true
         config:
