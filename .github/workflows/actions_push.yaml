@@ -11,7 +11,7 @@ jobs:
       
   deploy_to_kong:
     runs-on: self-hosted
-    name: Deploy
+    name: Deploy to Kong
     needs: build-test
     steps:        
     - name: Deploy declarative config
@@ -27,7 +27,7 @@ jobs:
         /bin/sh -c 'inso run test uts_616d31 -e env_env_3abee4'
   publish_to_portal:
     runs-on: self-hosted
-    name: Publish
+    name: Publish to Portal
     needs: test_kong
     steps:            
     - name: Publish Spec to Dev Portal
