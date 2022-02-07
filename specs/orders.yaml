@@ -8,8 +8,10 @@ info:
   contact:
     name: Kong
 servers:
-  - url: 'http://mockbin.org/request'
-    description: mockbin
+  - url: 'http://api.hr.demo'
+    description: Kong API Proxy
+  - url: 'http://api.finance.demo'
+    description: Kong API Proxy
 paths:    
   '/v1/order/{id}':
     get:
