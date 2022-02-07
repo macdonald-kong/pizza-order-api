@@ -1,14 +1,11 @@
 name: Deploy and Test on Kong
-
 on:
   push:
     branches: 
-      - master
-      
+      - main   
 jobs:
   build-test:
     uses: ./.github/workflows/actions_push_pr.yml
-      
   deploy_to_kong:
     runs-on: self-hosted
     name: Deploy to Kong
