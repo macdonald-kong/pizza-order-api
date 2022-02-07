@@ -7,7 +7,7 @@ on:
       
 jobs:
   call-workflow:
-    uses: ./.github/workflows/actions_push_pr.yaml
+    uses: .github/workflows/actions_push_pr.yaml@1
       
   deploy_to_kong:
     runs-on: self-hosted
