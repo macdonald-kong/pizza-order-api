@@ -1,14 +1,20 @@
 _id: env_env_3abee4488da06f3d87da49ff5cef494634b807a0_sub
 type: Environment
 parentId: env_3abee4488da06f3d87da49ff5cef494634b807a0
-modified: 1644246919364
+modified: 1644270967271
 created: 1644246919364
 name: OpenAPI env
 data:
   scheme: http
   base_path: ""
   host: api.hr.demo
-dataPropertyOrder: null
+  id: 123
+dataPropertyOrder:
+  "&":
+    - scheme
+    - base_path
+    - host
+    - id
 color: null
 isPrivate: false
 metaSortKey: 1644246919364
