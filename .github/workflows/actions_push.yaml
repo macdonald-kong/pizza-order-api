@@ -23,7 +23,7 @@ jobs:
     - name: Deploy declarative config
       run: |
         /bin/sh -c 'pushd /tmp && deck sync --kong-addr http://admin.kong.demo:8001 --headers Kong-Admin-Token:kong'
-    - name: Run Test Inso Test Suite
+    - name: Run Unit Tests
       run: |
         /bin/sh -c 'inso run test uts_616d31 -e env_env_3abee4'        
     - name: Publish Spec to Dev Portal
