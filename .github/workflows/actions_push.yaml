@@ -29,4 +29,4 @@ jobs:
     steps:            
     - name: Publish Spec to Dev Portal
       run: |
-        /bin/sh -c 'pushd ./specs && http --check-status --ignore-stdin PUT http://admin.kong.demo:8001/default/files/specs/orders.yaml Kong-Admin-Token:kong contents=@orders.yaml'
+        /bin/sh -c 'pushd /tmp && http --check-status --ignore-stdin PUT http://admin.kong.demo:8001/default/files/specs/orders.yaml Kong-Admin-Token:kong contents=@spec.yaml'
