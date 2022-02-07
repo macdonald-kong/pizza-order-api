@@ -11,12 +11,15 @@ jobs:
     steps:        
     - name: Checkout
       uses: actions/checkout@v2
+    - name: Export OpenAPI Spec
+      run: |
+        /bin/sh -c 'inso export spec "Pizza Orders" > /tmp/spec.yaml'
     - name: Lint OpenAPI Spec
       run: |
-        /bin/sh -c 'inso lint spec ./specs/orders.yaml'
+        /bin/sh -c 'inso lint spec /tmp/spec.yaml'
     - name: Generate Kong declarative configuration from Spec
       run: |
-        /bin/sh -c 'inso generate config ./specs/orders.yaml --type declarative > /tmp/kong.yaml'
+        /bin/sh -c 'inso generate config /tmp/spec.yaml --type declarative > /tmp/kong.yaml'
   static_code_analysis:
     runs-on: self-hosted
     name: Static Code Analysis
