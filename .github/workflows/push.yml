@@ -5,7 +5,7 @@ on:
       - main   
 jobs:
   build-test:
-    uses: ./.github/workflows/build_test_on_pr.yml
+    uses: ./.github/workflows/pull_request.yml
   deploy_to_kong:
     runs-on: self-hosted
     name: Deploy to Kong
