@@ -4,20 +4,29 @@ on:
     branches: 
       - main   
 jobs:
-  build-test:
+  build_test:
     uses: ./.github/workflows/pull_request.yml
-  deploy_to_kong:
+  deck-diff:
     runs-on: self-hosted
-    name: Deploy to Kong
+    name: Diff Configuration
     needs: build-test
     steps:        
     - name: Deploy declarative config
       run: |
-        /bin/sh -c 'pushd /tmp && deck sync --kong-addr http://admin.kong.demo:8001 --headers Kong-Admin-Token:kong'
-  test_kong:
+        /bin/sh -c 'pushd /tmp && deck diff --kong-addr http://admin.kong.demo:8001 --headers Kong-Admin-Token:${{ secrets.KONG_ADMIN_TOKEN }}'
+  deck-sync:
+    runs-on: self-hosted
+    name: Deploy to Kong
+    needs: deck-diff
+    environment: Production
+    steps:        
+    - name: Deploy declarative config
+      run: |
+        /bin/sh -c 'pushd /tmp && deck sync --kong-addr http://admin.kong.demo:8001 --headers Kong-Admin-Token:${{ secrets.KONG_ADMIN_TOKEN }}'
+  inso-test:
     runs-on: self-hosted
     name: Integration Testing
-    needs: deploy_to_kong
+    needs: deck-sync
     steps:        
     - name: Run Unit Tests
       run: |
@@ -25,8 +34,8 @@ jobs:
   publish_to_portal:
     runs-on: self-hosted
     name: Publish to Portal
-    needs: test_kong
+    needs: inso-test
     steps:            
     - name: Publish Spec to Dev Portal
       run: |
-        /bin/sh -c 'pushd /tmp && http --check-status --ignore-stdin PUT http://admin.kong.demo:8001/default/files/specs/orders.yaml Kong-Admin-Token:kong contents=@spec.yaml'
+        /bin/sh -c 'pushd /tmp && http --check-status --ignore-stdin PUT http://admin.kong.demo:8001/default/files/specs/orders.yaml Kong-Admin-Token:${{ secrets.KONG_ADMIN_TOKEN }} contents=@spec.yaml'
