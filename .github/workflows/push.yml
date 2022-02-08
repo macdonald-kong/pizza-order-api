@@ -13,7 +13,7 @@ jobs:
     steps:        
     - name: Deploy declarative config
       run: |
-        /bin/sh -c 'pushd /tmp && deck diff --kong-addr http://admin.kong.demo:8001 --headers Kong-Admin-Token:${{ secrets.KONG_ADMIN_TOKEN }}'
+        /bin/sh -c 'pushd /tmp && deck diff --kong-addr http://admin.kong.demo:8001 --headers Kong-Admin-Token:kong'
   deck-sync:
     runs-on: self-hosted
     name: Deploy to Kong
@@ -22,7 +22,7 @@ jobs:
     steps:        
     - name: Deploy declarative config
       run: |
-        /bin/sh -c 'pushd /tmp && deck sync --kong-addr http://admin.kong.demo:8001 --headers Kong-Admin-Token:${{ secrets.KONG_ADMIN_TOKEN }}'
+        /bin/sh -c 'pushd /tmp && deck sync --kong-addr http://admin.kong.demo:8001 --headers Kong-Admin-Token:kong'
   inso-test:
     runs-on: self-hosted
     name: Integration Testing
@@ -38,4 +38,4 @@ jobs:
     steps:            
     - name: Publish Spec to Dev Portal
       run: |
-        /bin/sh -c 'pushd /tmp && http --check-status --ignore-stdin PUT http://admin.kong.demo:8001/default/files/specs/orders.yaml Kong-Admin-Token:${{ secrets.KONG_ADMIN_TOKEN }} contents=@spec.yaml'
+        /bin/sh -c 'pushd /tmp && http --check-status --ignore-stdin PUT http://admin.kong.demo:8001/default/files/specs/orders.yaml Kong-Admin-Token:kong contents=@spec.yaml'
