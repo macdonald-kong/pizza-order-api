@@ -4,14 +4,35 @@ on:
     branches: 
       - main   
 jobs:
-  build-test:
-    uses: ./.github/workflows/pull_request.yml
+  build-kong-config:
+    runs-on: self-hosted
+    name: Build Config
+    steps:        
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Export OpenAPI Spec
+      run: |
+        /bin/sh -c 'inso export spec "Pizza Orders" > /tmp/spec.yaml'
+    - name: Lint OpenAPI Spec
+      run: |
+        /bin/sh -c 'inso lint spec /tmp/spec.yaml'
+    - name: Generate Kong declarative configuration from Spec
+      run: |
+        /bin/sh -c 'inso generate config /tmp/spec.yaml --type declarative > /tmp/kong.yaml'
+  static-code-analysis:
+    runs-on: self-hosted
+    name: Static Code Analysis
+    needs: build-kong-config
+    steps:        
+    - name: Validate Kong declarative configuration
+      run: |
+        /bin/sh -c 'pushd /tmp && deck validate'
   deck-diff:
     runs-on: self-hosted
     name: Diff Configuration
-    needs: build-test
+    needs: static-code-analysis
     steps:        
-    - name: Deploy declarative config
+    - name: Diff declarative config
       run: |
         /bin/sh -c 'pushd /tmp && deck diff --kong-addr http://admin.kong.demo:8001 --headers Kong-Admin-Token:kong'
   deck-sync:
