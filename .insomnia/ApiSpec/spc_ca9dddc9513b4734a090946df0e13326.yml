@@ -1,7 +1,7 @@
 _id: spc_ca9dddc9513b4734a090946df0e13326
 type: ApiSpec
 parentId: wrk_088a7b3aa28742e8ba0af1682e04fa37
-modified: 1644312398876
+modified: 1644330212975
 created: 1644244133777
 fileName: Pizza Orders
 contents: >-
@@ -17,8 +17,6 @@ contents: >-
       name: Kong
   servers:
     - url: 'http://api.hr.demo'
-      description: Kong API Proxy
-    - url: 'http://api.finance.demo'
       description: Kong API Proxy
   paths:    
     '/v1/order/{id}':
