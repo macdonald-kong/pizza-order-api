@@ -54,14 +54,12 @@ jobs:
         /bin/sh -c 'inso run test uts_616d31 -e env_env_3abee4'
   publish_to_portal:
     runs-on: self-hosted
-    env:
-      url: api.hr.demo
     name: Publish to Portal
     needs: inso-test
     steps:
     - name: Transform Server URL
       run: |
-        /bin/sh -c 'cd /tmp && yq -i ".servers.[0].url = strenv($url)" spec.yaml'
+        /bin/sh -c 'cd /tmp && yq -i '.servers[0].url = "api.hr.demo"' spec.yaml'
     - name: Publish Spec to Dev Portal
       run: |
         /bin/sh -c 'cd /tmp && http --check-status --ignore-stdin PUT http://admin.kong.demo:8001/default/files/specs/orders.yaml Kong-Admin-Token:kong contents=@spec.yaml'
