@@ -56,7 +56,10 @@ jobs:
     runs-on: self-hosted
     name: Publish to Portal
     needs: inso-test
-    steps:            
+    steps:
+    - name: Transform Server URL
+      run: |
+        /bin/sh -c 'pushd /tmp && yq -i ".servers.[0].url = 'api.hr.demo'" tst.yaml
     - name: Publish Spec to Dev Portal
       run: |
         /bin/sh -c 'pushd /tmp && http --check-status --ignore-stdin PUT http://admin.kong.demo:8001/default/files/specs/orders.yaml Kong-Admin-Token:kong contents=@spec.yaml'
