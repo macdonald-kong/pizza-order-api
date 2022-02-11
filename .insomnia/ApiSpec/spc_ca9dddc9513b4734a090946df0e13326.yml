@@ -1,7 +1,7 @@
 _id: spc_ca9dddc9513b4734a090946df0e13326
 type: ApiSpec
 parentId: wrk_088a7b3aa28742e8ba0af1682e04fa37
-modified: 1644619229324
+modified: 1644619776832
 created: 1644244133777
 fileName: Pizza Orders
 contents: >-
@@ -16,7 +16,7 @@ contents: >-
     contact:
       name: Kong
   servers:
-    - url: 'http://example.com'
+    - url: 'http://httpbin.org/anything'
   paths:    
     '/v1/order/{id}':
       get:
@@ -29,6 +29,13 @@ contents: >-
             minute: 20
             limit_by: ip
             policy: local
+        x-kong-plugin-application-registration:
+          enabled: true
+          config:
+            auto_approve: true
+            description: 'Pizza Order API'
+            display_name: 'Pizza Order API'
+            show_issuer: false
         x-kong-plugin-cors:
           enabled: true
           config: 
