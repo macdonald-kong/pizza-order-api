@@ -51,7 +51,7 @@ jobs:
     steps:        
     - name: Run Unit Tests
       run: |
-        /bin/sh -c 'inso run test spc_ca9ddd -e env_env_3abee4" --ci'
+        /bin/sh -c 'inso run test spc_ca9ddd -e env_env_3abee4 --ci'
   publish_to_portal:
     runs-on: self-hosted
     name: Publish to Portal
