@@ -51,7 +51,7 @@ jobs:
     steps:        
     - name: Run Unit Tests
       run: |
-        /bin/sh -c 'inso run test uts_616d31 -e env_env_3abee4'
+        /bin/sh -c 'inso run test "Test Pizza Orders" -e "OpenAPI env"'
   publish_to_portal:
     runs-on: self-hosted
     name: Publish to Portal
