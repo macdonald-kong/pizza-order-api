@@ -11,30 +11,25 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Export OpenAPI Spec
-      run: |
-        /bin/sh -c 'inso export spec "Pizza Orders" > /tmp/spec.yaml'
+      run: inso export spec "Pizza Orders" --output pizza.yaml --ci
     - name: Lint OpenAPI Spec
-      run: |
-        /bin/sh -c 'inso lint spec /tmp/spec.yaml'
+      run: inso lint spec "Pizza Orders"
     - name: Generate Kong declarative configuration from Spec
-      run: |
-        /bin/sh -c 'inso generate config /tmp/spec.yaml --type declarative > /tmp/kong.yaml'
+      run: inso generate config "Pizza Orders" --type declarative --tags pizza-order-1_0 --ci --output pizza-order-1_0.yaml
   static-code-analysis:
     runs-on: self-hosted
     name: Static Code Analysis
     needs: build-kong-config
     steps:        
     - name: Validate Kong declarative configuration
-      run: |
-        /bin/sh -c 'pushd /tmp && deck validate'
+      run: deck validate --state pizza-order-1_0.yaml
   deck-diff:
     runs-on: self-hosted
     name: Diff Configuration
     needs: static-code-analysis
     steps:        
     - name: Diff declarative config
-      run: |
-        /bin/sh -c 'pushd /tmp && deck diff --kong-addr http://admin.kong.demo:8001 --headers Kong-Admin-Token:kong'
+      run: deck diff --state pizza-order-1_0.yaml
   deck-sync:
     runs-on: self-hosted
     name: Deploy to Kong
@@ -42,24 +37,20 @@ jobs:
     environment: Production
     steps:        
     - name: Deploy declarative config
-      run: |
-        /bin/sh -c 'pushd /tmp && deck sync --kong-addr http://admin.kong.demo:8001 --headers Kong-Admin-Token:kong'
+      run: deck sync --state pizza-order-1_0.yaml
   inso-test:
     runs-on: self-hosted
     name: Integration Testing
     needs: deck-sync
     steps:        
     - name: Run Unit Tests
-      run: |
-        /bin/sh -c 'inso run test spc_ca9ddd -e env_env_3abee4 --ci'
+      run: inso run test "Test Pizza Orders" -e "OpenAPI env" --ci
   publish_to_portal:
     runs-on: self-hosted
     name: Publish to Portal
     needs: inso-test
     steps:
     - name: Transform Server URL
-      run: |
-        /bin/sh -c "cd /tmp && yq -i '.servers[0].url = \"http://api.hr.demo\"' spec.yaml"
+      run: cd /tmp && yq -i '.servers[0].url = \"http://api.hr.demo\"' spec.yaml
     - name: Publish Spec to Dev Portal
-      run: |
-        /bin/sh -c 'cd /tmp && http --check-status --ignore-stdin PUT http://admin.kong.demo:8001/default/files/specs/orders.yaml Kong-Admin-Token:kong contents=@spec.yaml'
+      run: curl -X POST http://admin.kong.demo:8001/default/files -F "path=specs/pizza-order-1_0.yaml" -F "contents=@pizza-order-1_0.yaml" -H Kong-Admin-Token:kong
