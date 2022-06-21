@@ -1,10 +1,10 @@
 _id: req_wrk_088a7b3aa28742e8ba0af1682e04fa376cfa33cb
 type: Request
 parentId: wrk_088a7b3aa28742e8ba0af1682e04fa37
-modified: 1644270431904
+modified: 1655847155773
 created: 1644246919358
 url: "{{ base_url }}/v1/order/{{ id }}"
-name: Fetches an order
+name: Fetches a order
 description: ""
 method: GET
 body: {}

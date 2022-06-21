@@ -1,13 +1,13 @@
-_id: env_env_3abee4488da06f3d87da49ff5cef494634b807a0_sub
+_id: env_851428cc8a0b4ef9b543a3243f916548
 type: Environment
 parentId: env_3abee4488da06f3d87da49ff5cef494634b807a0
-modified: 1655847362489
-created: 1644246919364
-name: OpenAPI env
+modified: 1655847376033
+created: 1655847000260
+name: Test
 data:
   scheme: http
   base_path: ""
-  host: api.hr.demo
+  host: httpbin.org
   id: 123
 dataPropertyOrder:
   "&":
@@ -17,4 +17,4 @@ dataPropertyOrder:
     - id
 color: null
 isPrivate: false
-metaSortKey: 1644246919364
+metaSortKey: 1655847000260
