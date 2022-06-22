@@ -34,7 +34,7 @@ jobs:
     needs: build-kong-config
     steps:        
     - name: Validate Kong declarative configuration
-      run: deck validate --state pizza-orders-1_0.yaml --kong-addr http://admin.kong.demo:8001 --headers ${{ secrets.KONG_ADMIN }}
+      run: deck validate --state pizza-orders-1_0.yaml
   deck-sync-test:
     runs-on: self-hosted
     name: Deploy to Kong Test Workspace
