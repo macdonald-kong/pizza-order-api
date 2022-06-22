@@ -65,7 +65,7 @@ jobs:
     - name: Export OpenAPI Spec
       run: inso export spec "Pizza Orders" --output pizza.yaml --ci
     - name: Publish Spec to Dev Portal
-      run: curl -X POST http://admin.kong.demo:8001/test/files -F "path=specs/Pizza_Orders_1_0" -F "contents=@pizza.yaml" -H ${{ secrets.KONG_ADMIN }}
+      run: curl -X POST http://admin.kong.demo:8001/test/files -F "path=specs/pizza.yaml" -F "contents=@pizza.yaml" -H ${{ secrets.KONG_ADMIN }}
   deck-sync-prod:
     runs-on: self-hosted
     name: Deploy to Kong Production Workspace
@@ -89,4 +89,4 @@ jobs:
     needs: inso-testing-prod
     steps:
     - name: Publish Spec to Dev Portal
-      run: curl -X POST http://admin.kong.demo:8001/production/files -F "path=specs/Pizza_Orders_1_0" -F "contents=@pizza.yaml" -H ${{ secrets.KONG_ADMIN }}
+      run: curl -X POST http://admin.kong.demo:8001/production/files -F "path=specs/pizza.yaml" -F "contents=@pizza.yaml" -H ${{ secrets.KONG_ADMIN }}
