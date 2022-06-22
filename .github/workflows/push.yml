@@ -27,8 +27,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Generate Kong declarative configuration from Spec
-      run: |
-        inso generate config "Pizza Orders" --type declarative --tags pizza-orders-1_0 -o pizza-orders-1_0.yaml
+      run: inso generate config "Pizza Orders" --type declarative --tags pizza-orders-1_0 -o pizza-orders-1_0.yaml
   static-code-analysis:
     runs-on: self-hosted
     name: Static Code Analysis
@@ -74,7 +73,9 @@ jobs:
     environment: Production
     steps:        
     - name: Deploy declarative config to production environment
-      run: deck sync --state pizza-orders-1_0.yaml --kong-addr http://admin.kong.demo:8001 --headers ${{ secrets.KONG_ADMIN }} --workspace production    
+      run: |
+        yq -i '.services[0].routes[0].paths[0] = "/prod/order/123"' pizza-orders-1_0.yaml
+        deck sync --state pizza-orders-1_0.yaml --kong-addr http://admin.kong.demo:8001 --headers ${{ secrets.KONG_ADMIN }} --workspace production    
   inso-testing-prod:
     runs-on: self-hosted
     name: Integration Testing - Production Environment
