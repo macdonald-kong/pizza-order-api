@@ -1,13 +1,13 @@
 _id: env_env_3abee4488da06f3d87da49ff5cef494634b807a0_sub
 type: Environment
 parentId: env_3abee4488da06f3d87da49ff5cef494634b807a0
-modified: 1655847959048
+modified: 1655916141178
 created: 1644246919364
-name: OpenAPI env
+name: dev
 data:
   scheme: http
   base_path: ""
-  host: api.hr.demo
+  host: httpbin.org/anything
   id: 123
 dataPropertyOrder:
   "&":
