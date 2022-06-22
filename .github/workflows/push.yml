@@ -28,9 +28,7 @@ jobs:
       uses: actions/checkout@v2
     - name: Generate Kong declarative configuration from Spec
       run: |
-        ls 
-        inso generate config "Pizza Orders" --type declarative --tags pizza-orders-1_0 --ci —-output /tmp/pizza-orders-1_0.yaml
-        ls 
+        inso generate config "Pizza Orders" --type declarative --tags pizza-orders-1_0 —-output pizza-orders-1_0.yaml
   static-code-analysis:
     runs-on: self-hosted
     name: Static Code Analysis
@@ -38,8 +36,7 @@ jobs:
     steps:        
     - name: Validate Kong declarative configuration
       run: |
-        ls
-        deck validate --state /tmp/pizza-orders-1_0.yaml
+        deck validate --state pizza-orders-1_0.yaml
   deck-sync-test:
     runs-on: self-hosted
     name: Deploy to Kong Test Workspace
