@@ -45,7 +45,7 @@ jobs:
   inso-testing-test:
     runs-on: self-hosted
     name: Integration Testing - Test Environment
-    needs: deck-sync
+    needs: deck-sync-test
     steps:        
     - name: Run Unit Tests
       run: inso run test "Test Pizza Orders" --env test --ci
