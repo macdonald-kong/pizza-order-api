@@ -29,7 +29,7 @@ jobs:
     - name: Generate Kong declarative configuration from Spec
       run: |
         ls 
-        inso generate config "Pizza Orders" --type declarative --tags pizza-orders-1_0 —-output pizza-orders-1_0.yaml --ci
+        inso generate config "Pizza Orders" --type declarative --tags pizza-orders-1_0 --ci —-output pizza-orders-1_0.yaml
         ls 
   static-code-analysis:
     runs-on: self-hosted
