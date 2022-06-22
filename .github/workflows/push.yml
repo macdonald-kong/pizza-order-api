@@ -27,7 +27,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Generate Kong declarative configuration from Spec
-      run: inso generate config "Pizza Orders" --type declarative --tags pizza-orders-1_0 —o pizza-orders-1_0.yaml --ci 
+      run: inso generate config "Pizza Orders" --type declarative --tags pizza-orders-1_0 —-output pizza-orders-1_0.yaml --ci 
   static-code-analysis:
     runs-on: self-hosted
     name: Static Code Analysis
