@@ -53,7 +53,7 @@ jobs:
   publish_to_portal-test:
     runs-on: self-hosted
     name: Publish to Test Portal
-    needs: deck-diff
+    needs: inso-testing-test
     steps:
     - name: Export OpenAPI Spec
       run: inso export spec "Pizza Orders" -o pizza.yaml
@@ -89,4 +89,4 @@ jobs:
     needs: inso-testing-prod
     steps:
     - name: Publish Spec to Dev Portal
-      run: curl -X POST http://admin.kong.demo:8001/production/files -F "path=specs/pizza.yaml" -F "contents=@pizza.yaml" -H ${{ secrets.KONG_ADMIN }}
+      run: curl -X POST http://admin.kong.demo:8001/production/files -F "path=specs/pizza.yaml" -F "contents=@./pizza.yaml" -H ${{ secrets.KONG_ADMIN }}
