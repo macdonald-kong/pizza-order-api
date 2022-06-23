@@ -63,7 +63,7 @@ jobs:
     needs: deck-diff
     steps:
     - name: Export OpenAPI Spec
-      run: inso export spec "Pizza Orders" --output pizza.yaml --ci
+      run: inso export spec "Pizza Orders" -o pizza.yaml
     - name: Publish Spec to Dev Portal
       run: curl -X POST http://admin.kong.demo:8001/test/files -F "path=specs/pizza.yaml" -F "contents=@pizza.yaml" -H ${{ secrets.KONG_ADMIN }}
   deck-sync-prod:
