@@ -50,13 +50,6 @@ jobs:
     steps:        
     - name: Run Unit Tests
       run: inso run test "Test Pizza Orders" --env test --ci
-  deck-diff:
-    runs-on: self-hosted
-    name: Diff Configuration
-    needs: inso-testing-test
-    steps:        
-    - name: Diff declarative config
-      run: deck diff --state pizza-orders-1_0.yaml --kong-addr http://admin.kong.demo:8001 --headers ${{ secrets.KONG_ADMIN }} --workspace production
   publish_to_portal-test:
     runs-on: self-hosted
     name: Publish to Test Portal
@@ -65,11 +58,18 @@ jobs:
     - name: Export OpenAPI Spec
       run: inso export spec "Pizza Orders" -o pizza.yaml
     - name: Publish Spec to Dev Portal
-      run: curl -X POST http://admin.kong.demo:8001/test/files -F "path=specs/pizza.yaml" -F "contents=@pizza.yaml" -H ${{ secrets.KONG_ADMIN }}
+      run: curl -X POST http://admin.kong.demo:8001/test/files -F "path=specs/pizza.yaml" -F "contents=@./pizza.yaml" -H ${{ secrets.KONG_ADMIN }}
+  deck-diff:
+    runs-on: self-hosted
+    name: Diff Configuration
+    needs: publish_to_portal-test
+    steps:        
+    - name: Diff declarative config
+      run: deck diff --state pizza-orders-1_0.yaml --kong-addr http://admin.kong.demo:8001 --headers ${{ secrets.KONG_ADMIN }} --workspace production
   deck-sync-prod:
     runs-on: self-hosted
     name: Deploy to Kong Production Workspace
-    needs: publish_to_portal-test
+    needs: deck-diff
     environment: Production
     steps:        
     - name: Deploy declarative config to production environment
