@@ -28,6 +28,11 @@ jobs:
       uses: actions/checkout@v2
     - name: Generate Kong declarative configuration from Spec
       run: inso generate config "Pizza Orders" --type declarative --tags pizza-orders-1_0 -o pizza-orders-1_0.yaml
+    - name: 'Upload Artifact'
+      uses: actions/upload-artifact@v3
+      with:
+        name: pizza-orders-1_0.yaml
+        path: pizza-orders-1_0.yaml
   static-code-analysis:
     runs-on: self-hosted
     name: Static Code Analysis
