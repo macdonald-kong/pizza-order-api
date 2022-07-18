@@ -31,7 +31,7 @@ jobs:
     - name: 'Upload Artifact'
       uses: actions/upload-artifact@v3
       with:
-        name: pizza-orders-1_0.yaml
+        name: pizaa-order-api-kong-config
         path: pizza-orders-1_0.yaml
   static-code-analysis:
     runs-on: self-hosted
@@ -62,6 +62,11 @@ jobs:
     steps:
     - name: Export OpenAPI Spec
       run: inso export spec "Pizza Orders" -o pizza.yaml
+    - name: 'Upload Artifact'
+      uses: actions/upload-artifact@v3
+      with:
+        name: pizza-order-api-oas
+        path: pizza.yaml
     - name: Publish Spec to Dev Portal
       run: curl -X POST http://admin.kong.demo:8001/test/files -F "path=specs/pizza.yaml" -F "contents=@./pizza.yaml" -H ${{ secrets.KONG_ADMIN }}
   deck-diff:
