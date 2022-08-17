@@ -1,7 +1,7 @@
 _id: spc_407add8747be41848cb98afe838c536f
 type: ApiSpec
 parentId: wrk_c8ac0df1fc474ed0993cffa853e6d1e2
-modified: 1660755418017
+modified: 1660755844242
 created: 1660750901417
 fileName: Pizza Orders
 contents: >
@@ -26,7 +26,7 @@ contents: >
         x-kong-plugin-rate-limiting:
           enabled: true
           config:
-            minute: 99
+            minute: 100
             limit_by: ip
             policy: local
         x-kong-plugin-cors:
