@@ -1,0 +1,20 @@
+_id: env_e4ee224d504b4687948b95594be2bc18
+type: Environment
+parentId: env_0b45dde4a6c34a8983ec6e28faa42f7e
+modified: 1660751311509
+created: 1660750901376
+name: prod
+data:
+  scheme: http
+  base_path: ""
+  host: localhost
+  id: 123
+dataPropertyOrder:
+  "&":
+    - scheme
+    - base_path
+    - host
+    - id
+color: null
+isPrivate: false
+metaSortKey: 1655847076431
