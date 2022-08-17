@@ -47,7 +47,7 @@ jobs:
     needs: static-code-analysis
     steps:        
     - name: Deploy declarative config to test environment
-      run: deck sync --state pizza-orders-1_0.yaml --kong-addr http://admin.kong.demo:8001 --headers ${{ secrets.KONG_ADMIN }} --workspace test
+      run: deck sync --state pizza-orders-1_0.yaml --kong-addr http://localhost:8001 --headers ${{ secrets.KONG_ADMIN }} --workspace test
   inso-testing-test:
     runs-on: self-hosted
     name: Integration Testing - Test Environment
@@ -68,14 +68,14 @@ jobs:
         name: pizza-order-api-oas
         path: pizza.yaml
     - name: Publish Spec to Dev Portal
-      run: curl -X POST http://admin.kong.demo:8001/test/files -F "path=specs/pizza.yaml" -F "contents=@./pizza.yaml" -H ${{ secrets.KONG_ADMIN }}
+      run: curl -X POST http://localhost:8001/test/files -F "path=specs/pizza.yaml" -F "contents=@./pizza.yaml" -H ${{ secrets.KONG_ADMIN }}
   deck-diff:
     runs-on: self-hosted
     name: Diff Configuration
     needs: publish_to_portal-test
     steps:        
     - name: Diff declarative config
-      run: deck diff --state pizza-orders-1_0.yaml --kong-addr http://admin.kong.demo:8001 --headers ${{ secrets.KONG_ADMIN }} --workspace production
+      run: deck diff --state pizza-orders-1_0.yaml --kong-addr http://localhost:8001 --headers ${{ secrets.KONG_ADMIN }} --workspace production
   deck-sync-prod:
     runs-on: self-hosted
     name: Deploy to Kong Production Workspace
@@ -85,7 +85,7 @@ jobs:
     - name: Deploy declarative config to production environment
       run: |
         yq -i '.services[0].routes[0].paths[0] = "/prod/order/123"' pizza-orders-1_0.yaml
-        deck sync --state pizza-orders-1_0.yaml --kong-addr http://admin.kong.demo:8001 --headers ${{ secrets.KONG_ADMIN }} --workspace production    
+        deck sync --state pizza-orders-1_0.yaml --kong-addr http://localhost:8001 --headers ${{ secrets.KONG_ADMIN }} --workspace production    
   inso-testing-prod:
     runs-on: self-hosted
     name: Integration Testing - Production Environment
@@ -99,4 +99,4 @@ jobs:
     needs: inso-testing-prod
     steps:
     - name: Publish Spec to Dev Portal
-      run: curl -X POST http://admin.kong.demo:8001/production/files -F "path=specs/pizza.yaml" -F "contents=@./pizza.yaml" -H ${{ secrets.KONG_ADMIN }}
+      run: curl -X POST http://localhost:8001/production/files -F "path=specs/pizza.yaml" -F "contents=@./pizza.yaml" -H ${{ secrets.KONG_ADMIN }}
