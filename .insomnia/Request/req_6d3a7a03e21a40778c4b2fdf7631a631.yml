@@ -1,7 +1,7 @@
 _id: req_6d3a7a03e21a40778c4b2fdf7631a631
 type: Request
 parentId: wrk_c8ac0df1fc474ed0993cffa853e6d1e2
-modified: 1660750901436
+modified: 1661871287905
 created: 1660750901436
 url: "{{ base_url }}/v1/order/{{ id }}"
 name: Fetches a order
@@ -9,7 +9,11 @@ description: ""
 method: GET
 body: {}
 parameters: []
-headers: []
+headers:
+  - id: pair_0f3624343a1d4c81940a2e71d9b02548
+    name: ""
+    value: ""
+    description: ""
 authentication: {}
 metaSortKey: -1644246919358
 isPrivate: false
