@@ -56,4 +56,4 @@ jobs:
       run: inso run test "Test Pizza Order Demo" --env demo --ci
 
     - name: Publish Spec to Dev Portal
-      run: curl -X POST http://localhost:8001/test/files -F "path=specs/pizza.yaml" -F "contents=@./pizza.yaml" -H ${{ secrets.KONG_ADMIN }}
+      run: curl -X POST http://localhost:8001/default/files -F "path=specs/pizza.yaml" -F "contents=@./pizza.yaml" -H ${{ secrets.KONG_ADMIN }}
