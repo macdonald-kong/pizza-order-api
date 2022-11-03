@@ -1,102 +1,59 @@
-name: Deploy and Test on Kong
+name: CI
+
 on:
   push:
     branches: 
       - main   
+      
 jobs:
-  lint-oas:
+
+  deploy-api:
     runs-on: self-hosted
-    name: Lint OpenAPI Specification
+    name: Deploy Pizza Order API to Kong Control Plane
+    
     steps:        
+    
     - name: Checkout
       uses: actions/checkout@v2
-    - name: Lint OpenAPI Spec
-      run: inso lint spec "Pizza Orders"
-  run-unit-tests:
-    runs-on: self-hosted
-    name: Run Unit Tests
-    needs: lint-oas
-    steps:        
-    - name: Run Unit Tests in Dev Environment
-      run: inso run test "Test Pizza Orders" --env dev --ci
-  build-kong-config:
-    runs-on: self-hosted
-    name: Build Config
-    needs: run-unit-tests
-    steps:        
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Generate Kong declarative configuration from Spec
-      run: inso generate config "Pizza Orders" --type declarative --tags pizza-orders-1_0 -o pizza-orders-1_0.yaml
-    - name: 'Upload Artifact'
-      uses: actions/upload-artifact@v3
-      with:
-        name: pizaa-order-api-kong-config
-        path: pizza-orders-1_0.yaml
-  static-code-analysis:
-    runs-on: self-hosted
-    name: Static Code Analysis
-    needs: build-kong-config
-    steps:        
-    - name: Validate Kong declarative configuration
-      run: |
-        deck validate --state pizza-orders-1_0.yaml
-  deck-sync-test:
-    runs-on: self-hosted
-    name: Deploy to Kong Test Workspace
-    needs: static-code-analysis
-    steps:        
-    - name: Deploy declarative config to test environment
-      run: deck sync --state pizza-orders-1_0.yaml --kong-addr http://localhost:8001 --headers ${{ secrets.KONG_ADMIN }} --workspace test
-  inso-testing-test:
-    runs-on: self-hosted
-    name: Integration Testing - Test Environment
-    needs: deck-sync-test
-    steps:        
-    - name: Run Unit Tests
-      run: inso run test "Test Pizza Orders" --env test --ci
-  publish_to_portal-test:
-    runs-on: self-hosted
-    name: Publish to Test Portal
-    needs: inso-testing-test
-    steps:
+
     - name: Export OpenAPI Spec
       run: inso export spec "Pizza Orders" -o pizza.yaml
-    - name: 'Upload Artifact'
+
+    - name: Lint OpenAPI Spec
+      run: inso lint spec "Pizza Orders"
+      
+    - name: Generate Kong declarative configuration from Spec
+      run: inso generate config "Pizza Orders" --type declarative --tags pizza-orders-1_0 -o pizza-orders-1_0_raw.yaml
+      
+    - name: Upgrade Version of Kong declarative configuration
+      run: deck convert --input-file pizza-orders-1_0_raw.yaml --from kong-gateway-2.x --to kong-gateway-3.x --output-file pizza-orders-1_0.yaml
+      
+    - name: 'Upload Kong Config Artifact'
       uses: actions/upload-artifact@v3
       with:
-        name: pizza-order-api-oas
-        path: pizza.yaml
+        name: pizza-order-api-kong-config
+        path: pizza-orders-1_0.yaml
+        
+    - name: Validate Kong declarative configuration
+      run: deck validate --state pizza-orders-1_0.yaml
+      
+    - name: Diff declarative config
+      run: deck diff --state pizza-orders-1_0.yaml --kong-addr http://localhost:8001 --headers ${{ secrets.KONG_ADMIN }} --workspace default
+      
+    - name: Backup Existing Kong Configuration
+      run: deck dump --kong-addr http://localhost:8001 --headers ${{ secrets.KONG_ADMIN }} --workspace default
+      
+    - name: 'Upload Kong Config Backup Artifact'
+      uses: actions/upload-artifact@v3
+      with:
+        name: kong-backup
+        path: kong.yaml
+        
+    - name: Deploy declarative config to default workspace
+      run: deck sync --state pizza-orders-1_0.yaml --kong-addr http://localhost:8001 --headers ${{ secrets.KONG_ADMIN }} --workspace default
+
+    - name: Run Unit Tests
+      run: inso run test "Test Pizza Orders" --env test --ci
+
     - name: Publish Spec to Dev Portal
       run: curl -X POST http://localhost:8001/test/files -F "path=specs/pizza.yaml" -F "contents=@./pizza.yaml" -H ${{ secrets.KONG_ADMIN }}
-  deck-diff:
-    runs-on: self-hosted
-    name: Diff Configuration
-    needs: publish_to_portal-test
-    steps:        
-    - name: Diff declarative config
-      run: deck diff --state pizza-orders-1_0.yaml --kong-addr http://localhost:8001 --headers ${{ secrets.KONG_ADMIN }} --workspace production
-  deck-sync-prod:
-    runs-on: self-hosted
-    name: Deploy to Kong Production Workspace
-    needs: deck-diff
-    environment: Production
-    steps:        
-    - name: Deploy declarative config to production environment
-      run: |
-        yq -i '.services[0].routes[0].paths[0] = "/prod/order/123"' pizza-orders-1_0.yaml
-        deck sync --state pizza-orders-1_0.yaml --kong-addr http://localhost:8001 --headers ${{ secrets.KONG_ADMIN }} --workspace production    
-  inso-testing-prod:
-    runs-on: self-hosted
-    name: Integration Testing - Production Environment
-    needs: deck-sync-prod
-    steps:        
-    - name: Run Unit Tests
-      run: inso run test "Test Pizza Orders" --env prod --ci
-  publish-to-portal-prod:
-    runs-on: self-hosted
-    name: Publish to Production Portal
-    needs: inso-testing-prod
-    steps:
-    - name: Publish Spec to Dev Portal
-      run: curl -X POST http://localhost:8001/production/files -F "path=specs/pizza.yaml" -F "contents=@./pizza.yaml" -H ${{ secrets.KONG_ADMIN }}
