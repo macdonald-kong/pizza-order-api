@@ -53,7 +53,7 @@ jobs:
       run: deck sync --state pizza-orders-1_0.yaml --kong-addr http://localhost:8001 --headers ${{ secrets.KONG_ADMIN }} --workspace default
 
     - name: Run Unit Tests
-      run: inso run test "Test Pizza Orders" --env test --ci
+      run: inso run test "Test Pizza Order Demo" --env demo --ci
 
     - name: Publish Spec to Dev Portal
       run: curl -X POST http://localhost:8001/test/files -F "path=specs/pizza.yaml" -F "contents=@./pizza.yaml" -H ${{ secrets.KONG_ADMIN }}
