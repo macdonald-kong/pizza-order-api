@@ -1,13 +1,13 @@
-_id: env_e4ee224d504b4687948b95594be2bc18
+_id: env_99f2f797e74c4f78a525c2c9e124d117
 type: Environment
 parentId: env_0b45dde4a6c34a8983ec6e28faa42f7e
-modified: 1667470581848
-created: 1660750901376
-name: prod
+modified: 1667470597487
+created: 1667470583977
+name: demo
 data:
   scheme: http
   base_path: ""
-  host: localhost:8000
+  host: example.com
   id: 123
 dataPropertyOrder:
   "&":
@@ -17,4 +17,4 @@ dataPropertyOrder:
     - id
 color: null
 isPrivate: false
-metaSortKey: 1655847076431
+metaSortKey: 1667470583977

@@ -1,0 +1,21 @@
+_id: req_bd129fe824a64c689787f08dfffd065d
+type: Request
+parentId: wrk_c8ac0df1fc474ed0993cffa853e6d1e2
+modified: 1667470746312
+created: 1667470723979
+url: http://example.com
+name: Fetches a pizza order
+description: ""
+method: GET
+body: {}
+parameters: []
+headers: []
+authentication: {}
+metaSortKey: -1667470723979
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
