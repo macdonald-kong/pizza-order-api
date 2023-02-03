@@ -1,7 +1,7 @@
 _id: spc_407add8747be41848cb98afe838c536f
 type: ApiSpec
 parentId: wrk_c8ac0df1fc474ed0993cffa853e6d1e2
-modified: 1675420049304
+modified: 1675421919596
 created: 1660750901417
 fileName: Pizza Orders
 contents: >
@@ -21,7 +21,7 @@ contents: >
     - name: order
       description: Pizza Order
   paths:    
-    '/v1/order/{id}':
+    '/v1/order':
       get:
         summary: Fetches an order
         operationId: fetchOrderById
@@ -79,15 +79,6 @@ contents: >
                         ]
                       }          
         description: "Fetch an order"
-        parameters:
-          - schema:
-              type: string
-              default: "123"
-            name: id
-            in: path
-            required: true
-            description: This is the order id
-            example: "123"
   components:
     schemas:
       Topping:
