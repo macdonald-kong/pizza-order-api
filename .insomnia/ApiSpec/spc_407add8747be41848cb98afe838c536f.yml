@@ -1,7 +1,7 @@
 _id: spc_407add8747be41848cb98afe838c536f
 type: ApiSpec
 parentId: wrk_c8ac0df1fc474ed0993cffa853e6d1e2
-modified: 1672914109162
+modified: 1675419961549
 created: 1660750901417
 fileName: Pizza Orders
 contents: >
@@ -17,10 +17,14 @@ contents: >
       name: Kong
   servers:
     - url: 'http://localhost:8000'
+  tags:
+    - name: order
+      description: Pizza Order
   paths:    
     '/v1/order/{id}':
       get:
         summary: Fetches an order
+        operationId: fetchOrderById
         tags:
           - order
         x-kong-plugin-rate-limiting:
@@ -142,8 +146,4 @@ contents: >
             type: string
           pizzas:
             $ref: "#/components/schemas/Pizzas"
-      Orders:
-        type: array
-        items:
-          $ref: "#/components/schemas/Order"
 contentType: yaml
