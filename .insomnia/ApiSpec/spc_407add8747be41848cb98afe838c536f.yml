@@ -1,7 +1,7 @@
 _id: spc_407add8747be41848cb98afe838c536f
 type: ApiSpec
 parentId: wrk_c8ac0df1fc474ed0993cffa853e6d1e2
-modified: 1697621024672
+modified: 1697629204059
 created: 1660750901417
 fileName: Pizza Orders
 contents: >
@@ -12,7 +12,7 @@ contents: >
     title: Pizza Order API
     license:
       name: Apache 2.0
-    description: 'Pizza Ordering API Demonstration'
+    description: 'Pizza Ordering API Demo'
     contact:
       name: Kong
   servers:
