@@ -68,7 +68,7 @@ jobs:
       run: deck diff --state kong.yaml --kong-addr ${{ secrets.KONG_ADDR }} --headers ${{ secrets.KONG_ADMIN }} --workspace default
       
     - name: Backup Existing Kong Configuration
-      run: deck dump --kong-addr ${{ secrets.KONG_ADDR }} --headers ${{ secrets.KONG_ADMIN }} --workspace default
+      run: deck dump --kong-addr ${{ secrets.KONG_ADDR }} --headers ${{ secrets.KONG_ADMIN }} --workspace default --yes
       
     # Publishes the Backup Kong Declarative Configuration as an artifact
 
