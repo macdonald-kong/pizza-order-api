@@ -78,5 +78,10 @@ jobs:
         name: kong-backup
         path: kong-backup.yaml
         
-    - name: Deploy declarative config to default workspace
-      run: deck sync --state kong.yaml --kong-addr ${{ secrets.KONG_ADDR }} --headers ${{ secrets.KONG_ADMIN }} --workspace default
+    - name: Deploy declarative config to control plane
+      id: deploy-declarative-config
+      run: |
+        deck gateway sync kong.yaml \
+          --kong-addr ${{ secrets.KONG_ADDR }} \
+          --headers ${{ secrets.KONG_ADMIN }} \
+          --workspace default
