@@ -51,26 +51,32 @@ jobs:
           --format yaml \
           --output-file ./kong-generated.yaml
 
-    - name: 'Upload Kong Config Artifact'
-      uses: actions/upload-artifact@v3
-      with:
-        name: pizza-order-api-kong-config
-        path: pizza-orders-1_0.yaml
-        
+    # Use decK Merge to merge together our generated Kong Declarative Configuration File with the contents of the Plugin folder in our repository
+
+    - name: Merge Kong Configuration with Plugins
+      run: |
+        deck file merge ./kong-generated.yaml ./api/plugins/* -o kong.yaml
+
+    # Use decK Validate to check that the new generated Kong Declarative Configuration is valid
+
     - name: Validate Kong declarative configuration
-      run: deck validate --state pizza-orders-1_0.yaml
-      
+      run: |
+        deck validate \
+          --state kong.yaml
+              
     - name: Diff declarative config
-      run: deck diff --state pizza-orders-1_0.yaml --kong-addr ${{ secrets.KONG_ADDR }} --headers ${{ secrets.KONG_ADMIN }} --workspace default
+      run: deck diff --state kong.yaml --kong-addr ${{ secrets.KONG_ADDR }} --headers ${{ secrets.KONG_ADMIN }} --workspace default
       
     - name: Backup Existing Kong Configuration
       run: deck dump --kong-addr ${{ secrets.KONG_ADDR }} --headers ${{ secrets.KONG_ADMIN }} --workspace default
       
+    # Publishes the Backup Kong Declarative Configuration as an artifact
+
     - name: 'Upload Kong Config Backup Artifact'
       uses: actions/upload-artifact@v3
       with:
         name: kong-backup
-        path: kong.yaml
+        path: kong-backup.yaml
         
     - name: Deploy declarative config to default workspace
-      run: deck sync --state pizza-orders-1_0.yaml --kong-addr ${{ secrets.KONG_ADDR }} --headers ${{ secrets.KONG_ADMIN }} --workspace default
+      run: deck sync --state kong.yaml --kong-addr ${{ secrets.KONG_ADDR }} --headers ${{ secrets.KONG_ADMIN }} --workspace default
