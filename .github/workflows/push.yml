@@ -32,9 +32,10 @@ jobs:
         tar -xf inso.tar.xz -C /tmp
         sudo cp /tmp/inso /usr/local/bin/
 
-
     - name: Export OpenAPI Spec
-      run: inso export spec "Pizza Orders" -o oas.yaml
+      working-directory: .
+      run: |
+        inso export spec $(yq '._id' $(echo -n .insomnia/ApiSpec/*)) --workingDir . --output ./api/oas.yaml
       
     # Check that the OpenAPI Specification file that we exported from the Insomnia Workspace is valid and well formed
 
