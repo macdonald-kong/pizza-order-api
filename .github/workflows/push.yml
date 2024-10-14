@@ -35,13 +35,13 @@ jobs:
     - name: Export OpenAPI Spec
       working-directory: .
       run: |
-        inso export spec $(yq '._id' $(echo -n .insomnia/ApiSpec/*)) --workingDir . --output ./api/oas.yaml
+        inso export spec $(yq '._id' $(echo -n .insomnia/ApiSpec/*)) --workingDir . --output oas.yaml
       
     # Check that the OpenAPI Specification file that we exported from the Insomnia Workspace is valid and well formed
 
     - name: Lint OpenAPI Spec
       run: |
-        inso lint spec ./oas.yaml
+        inso lint spec oas.yaml --workingDir .
 
     # Use decKs openapi2kong command to generate Kong Declarative Configuration from the OpenAPI Specification exported from the Insomnia Workspace.
 
