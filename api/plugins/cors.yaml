@@ -1,6 +1,5 @@
 plugins:
   - name: cors
-    service: employees-directory-v1-dev
     config:
       credentials: false
       exposed_headers: null
